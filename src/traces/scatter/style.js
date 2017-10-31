@@ -12,11 +12,11 @@
 var d3 = require('d3');
 
 var Drawing = require('../../components/drawing');
+var Color = require('../../components/color');
 var ErrorBars = require('../../components/errorbars');
 
-
-module.exports = function style(gd) {
-    var s = d3.select(gd).selectAll('g.trace.scatter');
+module.exports = function style(gd, cd) {
+    var s = cd ? cd[0].node3 : d3.select(gd).selectAll('g.trace.scatter');
 
     s.style('opacity', function(d) {
         return d[0].trace.opacity;
@@ -32,6 +32,23 @@ module.exports = function style(gd) {
 
             el.selectAll('text')
                 .call(Drawing.textPointStyle, trace, gd);
+
+            if(trace.selectedpoints) {
+                pts.style('opacity', function(d) {
+                    return d.selected ?
+                        trace.selected.marker.opacity :
+                        trace.unselected.marker.opacity;
+                });
+
+                pts.each(function(d) {
+                    Color.fill(d3.select(this), d.selected ?
+                        trace.selected.marker.color :
+                        trace.unselected.marker.color
+                    );
+                });
+
+                // TODO textfont.color !!1
+            }
         });
 
     s.selectAll('g.trace path.js-line')

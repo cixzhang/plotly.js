@@ -83,6 +83,7 @@ module.exports = function prepSelect(e, startX, startY, dragOptions, mode) {
             ) {
                 searchTraces.push({
                     selectPoints: trace._module.selectPoints,
+                    style: trace._module.style,
                     cd: cd,
                     xaxis: dragOptions.xaxes[0],
                     yaxis: dragOptions.yaxes[0]
@@ -94,6 +95,7 @@ module.exports = function prepSelect(e, startX, startY, dragOptions, mode) {
 
             searchTraces.push({
                 selectPoints: trace._module.selectPoints,
+                style: trace._module.style,
                 cd: cd,
                 xaxis: axes.getFromId(gd, trace.xaxis),
                 yaxis: axes.getFromId(gd, trace.yaxis)
@@ -201,17 +203,14 @@ module.exports = function prepSelect(e, startX, startY, dragOptions, mode) {
                     else selection = thisSelection;
                 }
 
-
                 eventData = {points: selection};
-
                 updatedSelectedState(gd, eventData);
-
                 fillRangeItems(eventData, poly, pts);
                 dragOptions.gd.emit('plotly_selecting', eventData);
 
-                var bpms = gd._fullLayout._basePlotModules;
-                for (var i = 0; i < bpms.length; i++) {
-                    bpms[i].plot(gd, null, {duration: 0});
+                for(i = 0; i < searchTraces.length; i++) {
+                    searchInfo = searchTraces[i];
+                    searchInfo.style(null, searchInfo.cd);
                 }
             }
         );
@@ -231,18 +230,15 @@ module.exports = function prepSelect(e, startX, startY, dragOptions, mode) {
                 }
 
                 updatedSelectedState(gd, {points: []});
-
                 gd.emit('plotly_deselect', null);
+
+                for(i = 0; i < searchTraces.length; i++) {
+                    searchInfo = searchTraces[i];
+                    searchInfo.style(null, searchInfo.cd);
+                }
             }
             else {
-                updatedSelectedState(gd, eventData);
-
                 dragOptions.gd.emit('plotly_selected', eventData);
-            }
-
-            var bpms = gd._fullLayout._basePlotModules;
-            for (var i = 0; i < bpms.length; i++) {
-                bpms[i].plot(gd, null, {duration: 0});
             }
         });
     };
@@ -263,9 +259,7 @@ function updatedSelectedState(gd, eventData) {
         if(fullData[i].selectedpoints) delete fullData[i].selectedpoints;
     }
 
-    if(!eventData || !eventData.points) {
-        return;
-    }
+    if(!eventData || !eventData.points) return;
 
     var pts = eventData.points;
     for(i = 0; i < pts.length; i++) {
@@ -277,11 +271,13 @@ function updatedSelectedState(gd, eventData) {
             trace.selectedpoints = [];
         }
         trace.selectedpoints.push(pt.pointNumber);
+//      trace.selectedids.push(pt.id);
 
         if(!fullTrace.selectedpoints) {
             fullTrace.selectedpoints = [];
         }
         fullTrace.selectedpoints.push(pt.pointNumber);
+//      fullTrace.selectedids.push(pt.id);
     }
 }
 

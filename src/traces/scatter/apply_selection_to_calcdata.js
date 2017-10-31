@@ -9,33 +9,19 @@
 
 'use strict';
 
-module.exports = function applySelectionToCalcdata (cd) {
-    var i;
-    console.log('cd:', cd);
-
-    var trace = cd[0].t;
-    console.log('trace:', trace);
-
+module.exports = function applySelectionToCalcdatr(cd, trace) {
     var selectedpoints = trace.selectedpoints;
-    var selectedids = trace.selectedids;
+//     var selectedids = trace.selectedids;
+    var i;
 
-    if (!selectedpoints) {
-        return;
-    }
+    if(!selectedpoints) return;
 
     var selectedPointIndex = {};
-    for (i = 0; i < selectedpoints.length; i++) {
-        selectedPointIndex[selectedpoints[i]] = true;
+    for(i = 0; i < selectedpoints.length; i++) {
+        selectedPointIndex[selectedpoints[i]] = 1;
     }
 
-    for (i = 0; i < cd.length; i++) {
-        var pt = cd[i];
-
-        if (!selectedpoints) {
-            delete pt.selected;
-        } else {
-            pt.selected = !!selectedPointIndex[i];
-        }
+    for(i = 0; i < cd.length; i++) {
+        cd[i].selected = selectedPointIndex[i] || 0;
     }
-
-}
+};

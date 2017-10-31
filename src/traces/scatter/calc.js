@@ -128,8 +128,7 @@ module.exports = function calc(gd, trace) {
     }
 
     arraysToCalcdata(cd, trace);
-
-    applySelectionToCalcdata(cd);
+    applySelectionToCalcdata(cd, trace);
 
     gd.firstscatter = false;
     return cd;
