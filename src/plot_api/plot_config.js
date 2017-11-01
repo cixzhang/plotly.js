@@ -16,6 +16,8 @@
  * so we get the right experience without any config argument.
  */
 
+var Color = require('../components/color');
+
 module.exports = {
 
     // no interactivity, for export or image generation
@@ -126,5 +128,8 @@ module.exports = {
 
     // Set global transform to be applied to all traces with no
     // specification needed
-    globalTransforms: []
+    globalTransforms: [],
+
+    // Set the default trace color scheme
+    traceColorDefaults: Color.defaults
 };

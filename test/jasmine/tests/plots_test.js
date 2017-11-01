@@ -152,6 +152,17 @@ describe('Test Plots', function() {
 
             testSanitizeMarginsHasBeenCalledOnlyOnce(gd);
         });
+
+        it('should include the trace color override', function() {
+            var gd = {
+                _context: {
+                    traceColorDefaults: ['red', 'yellow', 'blue']
+                }
+            };
+
+            Plots.supplyDefaults(gd);
+            expect(gd._fullLayout._traceColors).toBe(gd._context.traceColorDefaults);
+        });
     });
 
     describe('Plots.supplyLayoutGlobalDefaults should', function() {
@@ -243,6 +254,23 @@ describe('Test Plots', function() {
                 traceOut = supplyTraceDefaults(traceIn, 0, layout);
                 expect(traceOut.hoverinfo).toEqual('name');
             });
+        });
+
+        it('should pass defined trace colors to supplyDefaults', function() {
+            var originalGetModule = Plots.getModule;
+            var supplyDefaultsSpy;
+
+            spyOn(Plots, 'getModule').and.callFake(function(traceOut) {
+                var mod = originalGetModule(traceOut);
+                spyOn(mod, 'supplyDefaults').and.callThrough();
+                supplyDefaultsSpy = mod.supplyDefaults;
+                return mod;
+            });
+
+            layout._traceColors = ['red', 'yellow', 'blue'];
+            traceIn = {};
+            traceOut = supplyTraceDefaults(traceIn, 0, layout);
+            expect(supplyDefaultsSpy).toHaveBeenCalledWith(traceIn, traceOut, 'red', layout);
         });
     });
 

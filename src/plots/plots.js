@@ -459,6 +459,8 @@ plots.supplyDefaults = function(gd) {
 
     // then do the data
     newFullLayout._globalTransforms = (gd._context || {}).globalTransforms;
+    // pass along default trace colors
+    newFullLayout._traceColors = (gd._context || {}).traceColorDefaults;
     plots.supplyDataDefaults(newData, newFullData, newLayout, newFullLayout);
 
     // attach helper method to check whether a plot type is present on graph
@@ -950,8 +952,9 @@ plots.supplyFrameDefaults = function(frameIn) {
 };
 
 plots.supplyTraceDefaults = function(traceIn, traceOutIndex, layout, traceInIndex) {
+    var traceColors = layout._traceColors || Color.defaults;
     var traceOut = {},
-        defaultColor = Color.defaults[traceOutIndex % Color.defaults.length];
+        defaultColor = traceColors[traceOutIndex % traceColors.length];
 
     function coerce(attr, dflt) {
         return Lib.coerce(traceIn, traceOut, plots.attributes, attr, dflt);
