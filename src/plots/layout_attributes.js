@@ -175,5 +175,6 @@ module.exports = {
         role: 'info',
         editType: 'legend',
         description: 'Determines whether or not a legend is drawn.'
-    }
+    },
+    colorway: colorAttrs.defaults,
 };

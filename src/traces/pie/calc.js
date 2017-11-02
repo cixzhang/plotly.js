@@ -107,7 +107,9 @@ module.exports = function calc(gd, trace) {
                 pt.color = colorMap[pt.label];
             }
             else {
-                colorMap[pt.label] = pt.color = nextDefaultColor(fullLayout._piedefaultcolorcount);
+                colorMap[pt.label] = pt.color = nextDefaultColor(
+                    fullLayout._piedefaultcolorcount,
+                    fullLayout._colorway);
                 fullLayout._piedefaultcolorcount++;
             }
         }
@@ -148,10 +150,10 @@ module.exports = function calc(gd, trace) {
  */
 var pieDefaultColors;
 
-function nextDefaultColor(index) {
+function nextDefaultColor(index, colorway) {
     if(!pieDefaultColors) {
         // generate this default set on demand (but then it gets saved in the module)
-        var mainDefaults = Color.defaults;
+        var mainDefaults = colorway || Color.defaults;
         pieDefaultColors = mainDefaults.slice();
 
         var i;
