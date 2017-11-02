@@ -192,8 +192,7 @@ function cleanAxRef(container, attr) {
 
 // Make a few changes to the data right away
 // before it gets used for anything
-exports.cleanData = function(data, existingData, colorway) {
-    var defaultColors = colorway || Color.defaults;
+exports.cleanData = function(data, existingData) {
     // Enforce unique IDs
     var suids = [], // seen uids --- so we can weed out incoming repeats
         uids = data.concat(Array.isArray(existingData) ? existingData : [])
@@ -230,7 +229,7 @@ exports.cleanData = function(data, existingData, colorway) {
 
         // error_y.opacity is obsolete - merge into color
         if(trace.error_y && 'opacity' in trace.error_y) {
-            var dc = defaultColors,
+            var dc = Color.defaults,
                 yeColor = trace.error_y.color ||
                 (Registry.traceIs(trace, 'bar') ? Color.defaultLine : dc[tracei % dc.length]);
             trace.error_y.color = Color.addOpacity(

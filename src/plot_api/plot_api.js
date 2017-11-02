@@ -115,7 +115,7 @@ Plotly.plot = function(gd, data, layout, config) {
     // if there is already data on the graph, append the new data
     // if you only want to redraw, pass a non-array for data
     if(Array.isArray(data)) {
-        helpers.cleanData(data, gd.data, layout.colorway);
+        helpers.cleanData(data, gd.data);
 
         if(graphWasEmpty) gd.data = data;
         else gd.data.push.apply(gd.data, data);
@@ -587,7 +587,7 @@ Plotly.redraw = function(gd) {
         throw new Error('This element is not a Plotly plot: ' + gd);
     }
 
-    helpers.cleanData(gd.data, gd.data, gd.layout.colorway);
+    helpers.cleanData(gd.data, gd.data);
     helpers.cleanLayout(gd.layout);
 
     gd.calcdata = undefined;
@@ -1045,7 +1045,7 @@ Plotly.addTraces = function addTraces(gd, traces, newIndices) {
         return Lib.extendFlat({}, trace);
     });
 
-    helpers.cleanData(traces, gd.data, gd.layout.colorway);
+    helpers.cleanData(traces, gd.data);
 
     // add the traces to gd.data (no redrawing yet!)
     for(i = 0; i < traces.length; i++) {
