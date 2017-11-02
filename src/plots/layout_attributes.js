@@ -176,5 +176,11 @@ module.exports = {
         editType: 'legend',
         description: 'Determines whether or not a legend is drawn.'
     },
-    colorway: colorAttrs.defaults,
+    colorway: {
+        valType: 'any',
+        dflt: colorAttrs.defaults,
+        role: 'style',
+        editType: 'plot',
+        description: 'Sets the default trace colors.'
+    },
 };
