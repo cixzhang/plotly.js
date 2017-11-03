@@ -23,16 +23,14 @@ module.exports = function calc(gd, trace) {
     var fullLayout = gd._fullLayout;
     var colorWay = fullLayout.colorway;
     var colorMap = fullLayout._piecolormap;
-    var pieColorWay = fullLayout._piecolorway;
     var allThisTraceLabels = {};
     var vTotal = 0;
     var hiddenLabels = fullLayout.hiddenlabels || [];
 
     var i, v, label, hidden, pt;
 
-    if(!pieColorWay.length && colorWay !== Color.defaults) {
-        pieColorWay.push.apply(pieColorWay, colorWay);
-        generateDefaultColors(colorWay, pieColorWay);
+    if(!fullLayout._piecolorway && colorWay !== Color.defaults) {
+        fullLayout._piecolorway = generateDefaultColors(colorWay);
     }
 
     if(trace.dlabel) {
@@ -116,7 +114,7 @@ module.exports = function calc(gd, trace) {
             else {
                 colorMap[pt.label] = pt.color = nextDefaultColor(
                     fullLayout._piedefaultcolorcount,
-                    pieColorWay
+                    fullLayout._piecolorway
                 );
                 fullLayout._piedefaultcolorcount++;
             }
@@ -162,16 +160,17 @@ function nextDefaultColor(index, pieColorWay) {
     if(!pieDefaultColors) {
         // generate this default set on demand (but then it gets saved in the module)
         var mainDefaults = Color.defaults;
-        pieDefaultColors = mainDefaults.slice();
-        generateDefaultColors(mainDefaults, pieDefaultColors);
+        pieDefaultColors = generateDefaultColors(mainDefaults);
     }
 
-    var pieColors = pieColorWay.length ? pieColorWay : pieDefaultColors;
+    var pieColors = pieColorWay || pieDefaultColors;
     return pieColors[index % pieColors.length];
 }
 
-function generateDefaultColors(colorList, pieColors) {
+function generateDefaultColors(colorList) {
     var i;
+
+    var pieColors = colorList.slice();
 
     for(i = 0; i < colorList.length; i++) {
         pieColors.push(tinycolor(colorList[i]).lighten(20).toHexString());
