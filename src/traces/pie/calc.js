@@ -21,12 +21,19 @@ module.exports = function calc(gd, trace) {
     var colors = trace.marker.colors;
     var cd = [];
     var fullLayout = gd._fullLayout;
+    var colorWay = fullLayout.colorway;
     var colorMap = fullLayout._piecolormap;
+    var pieColorWay = fullLayout._piecolorway;
     var allThisTraceLabels = {};
     var vTotal = 0;
     var hiddenLabels = fullLayout.hiddenlabels || [];
 
     var i, v, label, hidden, pt;
+
+    if(!pieColorWay.length && colorWay !== Color.defaults) {
+        pieColorWay.push.apply(pieColorWay, colorWay);
+        generateDefaultColors(colorWay, pieColorWay);
+    }
 
     if(trace.dlabel) {
         labels = new Array(vals.length);
@@ -109,7 +116,8 @@ module.exports = function calc(gd, trace) {
             else {
                 colorMap[pt.label] = pt.color = nextDefaultColor(
                     fullLayout._piedefaultcolorcount,
-                    fullLayout.colorway);
+                    pieColorWay
+                );
                 fullLayout._piedefaultcolorcount++;
             }
         }
@@ -150,22 +158,28 @@ module.exports = function calc(gd, trace) {
  */
 var pieDefaultColors;
 
-function nextDefaultColor(index, colorway) {
+function nextDefaultColor(index, pieColorWay) {
     if(!pieDefaultColors) {
         // generate this default set on demand (but then it gets saved in the module)
-        var mainDefaults = colorway || Color.defaults;
+        var mainDefaults = Color.defaults;
         pieDefaultColors = mainDefaults.slice();
-
-        var i;
-
-        for(i = 0; i < mainDefaults.length; i++) {
-            pieDefaultColors.push(tinycolor(mainDefaults[i]).lighten(20).toHexString());
-        }
-
-        for(i = 0; i < Color.defaults.length; i++) {
-            pieDefaultColors.push(tinycolor(mainDefaults[i]).darken(20).toHexString());
-        }
+        generateDefaultColors(mainDefaults, pieDefaultColors);
     }
 
-    return pieDefaultColors[index % pieDefaultColors.length];
+    var pieColors = pieColorWay.length ? pieColorWay : pieDefaultColors;
+    return pieColors[index % pieColors.length];
+}
+
+function generateDefaultColors(colorList, pieColors) {
+    var i;
+
+    for(i = 0; i < colorList.length; i++) {
+        pieColors.push(tinycolor(colorList[i]).lighten(20).toHexString());
+    }
+
+    for(i = 0; i < colorList.length; i++) {
+        pieColors.push(tinycolor(colorList[i]).darken(20).toHexString());
+    }
+
+    return pieColors;
 }

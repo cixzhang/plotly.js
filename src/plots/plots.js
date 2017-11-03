@@ -2174,6 +2174,7 @@ plots.doCalcdata = function(gd, traces) {
 
     // for sharing colors across pies (and for legend)
     fullLayout._piecolormap = {};
+    fullLayout._piecolorway = [];
     fullLayout._piedefaultcolorcount = 0;
 
     // If traces were specified and this trace was not included,
