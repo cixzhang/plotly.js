@@ -180,7 +180,7 @@ module.exports = {
         valType: 'colorlist',
         dflt: colorAttrs.defaults,
         role: 'style',
-        editType: 'plot',
+        editType: 'calc',
         description: 'Sets the default trace colors.'
     },
 };
