@@ -454,9 +454,6 @@ plots.supplyDefaults = function(gd) {
 
     newFullLayout._initialAutoSizeIsDone = true;
 
-    // pass along trace colors
-    newFullLayout._colorway = newLayout.colorway;
-
     // keep track of how many traces are inputted
     newFullLayout._dataLength = newData.length;
 
@@ -953,7 +950,7 @@ plots.supplyFrameDefaults = function(frameIn) {
 };
 
 plots.supplyTraceDefaults = function(traceIn, traceOutIndex, layout, traceInIndex) {
-    var colorway = layout._colorway || Color.defaults;
+    var colorway = layout.colorway || Color.defaults;
     var traceOut = {},
         defaultColor = colorway[traceOutIndex % colorway.length];
 
@@ -1141,6 +1138,8 @@ plots.supplyLayoutGlobalDefaults = function(layoutIn, layoutOut) {
 
     coerce('separators');
     coerce('hidesources');
+
+    coerce('colorway');
 
     Registry.getComponentMethod(
         'calendars',

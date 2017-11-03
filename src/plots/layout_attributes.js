@@ -177,7 +177,7 @@ module.exports = {
         description: 'Determines whether or not a legend is drawn.'
     },
     colorway: {
-        valType: 'any',
+        valType: 'colorlist',
         dflt: colorAttrs.defaults,
         role: 'style',
         editType: 'plot',

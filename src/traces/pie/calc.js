@@ -109,7 +109,7 @@ module.exports = function calc(gd, trace) {
             else {
                 colorMap[pt.label] = pt.color = nextDefaultColor(
                     fullLayout._piedefaultcolorcount,
-                    fullLayout._colorway);
+                    fullLayout.colorway);
                 fullLayout._piedefaultcolorcount++;
             }
         }
